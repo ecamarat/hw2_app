@@ -18,3 +18,8 @@
 [2013-03-17 04:48:52] INFO  WEBrick 1.3.1
 [2013-03-17 04:48:52] INFO  ruby 1.9.2 (2011-07-09) [i686-linux]
 [2013-03-17 04:48:52] WARN  TCPServer Error: Address already in use - bind(2)
+[2013-03-17 15:15:06] INFO  WEBrick 1.3.1
+[2013-03-17 15:15:06] INFO  ruby 1.9.2 (2011-07-09) [i686-linux]
+[2013-03-17 15:15:06] INFO  WEBrick::HTTPServer#start: pid=2479 port=3000
+[2013-03-17 15:52:08] INFO  going to shutdown ...
+[2013-03-17 15:52:08] INFO  WEBrick::HTTPServer#start done.

@@ -7,7 +7,20 @@ class MoviesController < ApplicationController
   end
 
   def index
+	@all_ratings = Movie.getRatings
+	col_index = {'title' => 0, 'date' => 2} # index of the columns
+	session[:sort] = params[:sort] if params[:sort]
+	@title_class = (session[:sort] == 'title') ? 'hilite' : ''
+	@date_class = (session[:sort] == 'date') ? 'hilite' : ''
     @movies = Movie.all
+	@movies = @movies.sort do |x,y|
+		case session[:sort]
+			when 'title'
+				x.title <=> y.title
+			when 'date'
+				x.release_date <=> y.release_date
+		end
+	end
   end
 
   def new
