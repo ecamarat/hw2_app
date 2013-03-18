@@ -8,11 +8,40 @@ class MoviesController < ApplicationController
 
   def index
 	@all_ratings = Movie.getRatings
-	col_index = {'title' => 0, 'date' => 2} # index of the columns
-	session[:sort] = params[:sort] if params[:sort]
+	@ratings_values = Hash.new
+	@movies = Array.new
+	if params[:sort]
+		session[:sort] = params[:sort]
+	end
+	unless session[:ratings]
+		session[:ratings] = Hash.new
+	end
+	if params[:commit] # If they used the refresh button
+		if params[:ratings]
+			@all_ratings.each do |x| #go through all ratings and update values
+				if params[:ratings][x] # if the rating is checked
+					session[:ratings][x] = true
+				else #It's not there
+					session[:ratings][x] = false
+				end
+			end
+		end
+	end
+
 	@title_class = (session[:sort] == 'title') ? 'hilite' : ''
 	@date_class = (session[:sort] == 'date') ? 'hilite' : ''
-    @movies = Movie.all
+	@all_ratings.each do |x|
+		if session[:ratings][x]
+			@ratings_values[x] =  true
+			@movies = @movies + Movie.find_all_by_rating(x)
+		elsif session[:ratings][x] == false
+			@ratings_values[x] = false
+		else
+			session[:ratings][x] = true
+			@ratings_values[x] =  true
+			@movies = @movies + Movie.find_all_by_rating(x)
+		end
+	end
 	@movies = @movies.sort do |x,y|
 		case session[:sort]
 			when 'title'
@@ -21,6 +50,7 @@ class MoviesController < ApplicationController
 				x.release_date <=> y.release_date
 		end
 	end
+
   end
 
   def new
