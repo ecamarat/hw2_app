@@ -42,12 +42,14 @@ class MoviesController < ApplicationController
 			@movies = @movies + Movie.find_all_by_rating(x)
 		end
 	end
-	@movies = @movies.sort do |x,y|
-		case session[:sort]
-			when 'title'
-				x.title <=> y.title
-			when 'date'
-				x.release_date <=> y.release_date
+	if session[:sort]
+		@movies = @movies.sort do |x,y|
+			case session[:sort]
+				when 'title'
+					x.title <=> y.title
+				when 'date'
+					x.release_date <=> y.release_date
+			end
 		end
 	end
 
