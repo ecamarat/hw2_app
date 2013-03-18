@@ -12,6 +12,8 @@ class MoviesController < ApplicationController
 	@movies = Array.new
 	if params[:sort]
 		session[:sort] = params[:sort]
+	elsif session[:sort]
+		redirect_to movies_path(:sort => session[:sort], :ratings => params[:ratings], :commit => 'Refresh')
 	end
 	unless session[:ratings]
 		session[:ratings] = Hash.new
@@ -25,9 +27,26 @@ class MoviesController < ApplicationController
 					session[:ratings][x] = false
 				end
 			end
+		else # default to session, redirect
+			redir_hash = Hash.new
+			session[:ratings].keys.each do |key|
+				if session[:ratings][key]
+					redir_hash[key] = "1"
+				end
+			end
+			redirect_to movies_path(:sort => params[:sort], :ratings => redir_hash, :commit => 'Refresh')
 		end
 	end
 
+	unless params[:ratings] # if ratings weren't passed, redirect
+		redir_hash = Hash.new
+			session[:ratings].keys.each do |key|
+				if session[:ratings][key]
+					redir_hash[key] = "1"
+				end
+			end
+			redirect_to movies_path(:sort => params[:sort], :ratings => redir_hash, :commit => 'Refresh')
+	end
 	@title_class = (session[:sort] == 'title') ? 'hilite' : ''
 	@date_class = (session[:sort] == 'date') ? 'hilite' : ''
 	@all_ratings.each do |x|
@@ -52,6 +71,8 @@ class MoviesController < ApplicationController
 			end
 		end
 	end
+
+	@params = params
 
   end
 
